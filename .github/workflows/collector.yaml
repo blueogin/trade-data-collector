@@ -9,7 +9,7 @@ on:
       - main   # Trigger workflow for pull requests targeting `main` branch
 
 jobs:
-  building and formatting:
+  building:
     name: setup environment
     runs-on: ubuntu-latest  # Set the OS for the runner
 
