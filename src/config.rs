@@ -27,17 +27,17 @@ use std::env;
 /// | Linear    | LINEAR_WS_RPC_URL          |
 ///
 pub fn get_ws_rpc_url(network: &str) -> Result<String, String> {
-  // Determine the corresponding environment variable for the given network
-  let env_var = match network {
-    "Base" => "BASE_WS_RPC_URL",
-    "Mainnet" => "MAINNET_WS_RPC_URL",
-    "Flare" => "FLARE_WS_RPC_URL",
-    "Arbitrum" => "ARBITRUM_WS_RPC_URL",
-    "Optimism" => "OPTIMISM_WS_RPC_URL",
-    "Linear" => "LINEAR_WS_RPC_URL",
-    _ => return Err(format!("Unsupported network: {}", network)),
-  };
+    // Determine the corresponding environment variable for the given network
+    let env_var = match network {
+        "Base" => "BASE_WS_RPC_URL",
+        "Mainnet" => "MAINNET_WS_RPC_URL",
+        "Flare" => "FLARE_WS_RPC_URL",
+        "Arbitrum" => "ARBITRUM_WS_RPC_URL",
+        "Optimism" => "OPTIMISM_WS_RPC_URL",
+        "Linear" => "LINEAR_WS_RPC_URL",
+        _ => return Err(format!("Unsupported network: {}", network)),
+    };
 
-  // Retrieve the WebSocket RPC URL from environment variables
-  env::var(env_var).map_err(|_| format!("{} not set", env_var))
+    // Retrieve the WebSocket RPC URL from environment variables
+    env::var(env_var).map_err(|_| format!("{} not set", env_var))
 }
