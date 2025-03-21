@@ -1,0 +1,41 @@
+name: Trade Data Collector CI/CD
+
+on:
+  push:
+    branches:
+      - main   # Trigger workflow on pushes to the `main` branch
+  pull_request:
+    branches:
+      - main   # Trigger workflow for pull requests targeting `main` branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Set the OS for the runner
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Rust
+      uses: actions/setup-rust@v1
+      with:
+        rust-version: 1.87.0  # Use the desired version of Rust (can be replaced with `stable`)
+
+    - name: Install dependencies
+      run: |
+        rustup component add clippy
+
+    - name: Run clippy
+      run: cargo clippy --all-targets --all-features -- -D warnings  # Run clippy to lint the code
+
+    - name: Build the project
+      run: cargo build --release  # Build the project in release mode
+
+    - name: Run tests
+      run: cargo test --verbose  # Run all tests
+
+    - name: Check formatting
+      run: cargo fmt -- --check  # Check formatting with rustfmt
+
+    - name: Run tests on sample dataset (if applicable)
+      run: cargo test -- --nocapture  # Optionally run specific tests if needed
