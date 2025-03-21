@@ -12,7 +12,6 @@ use proptest::test_runner::{Config, TestRunner};
 use std::error::Error;
 use std::io::Read;
 use tempfile::NamedTempFile;
-use tokio;
 use utils::get_contract_creation_block;
 use utils::get_latest_block_number;
 
@@ -206,12 +205,10 @@ fn test_write_to_csv() -> Result<(), Box<dyn Error>> {
 
     // Prepare test data for order events
     let events = vec![OrderEvent {
-        tx_origin: H160::from_slice(
-            &decode("abc123abc123abc123abc123abc123abc123abcd")?.as_slice(),
-        ),
+        tx_origin: H160::from_slice(decode("abc123abc123abc123abc123abc123abc123abcd")?.as_slice()),
         event_type: "TakeOrderV2".to_string(),
         txn_hash: H256::from_slice(
-            &decode("1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef")?.as_slice(),
+            decode("1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef")?.as_slice(),
         ),
         timestamp: 1617912345,
     }];
