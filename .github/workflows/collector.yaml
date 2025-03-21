@@ -10,7 +10,7 @@ on:
 
 jobs:
   building:
-    name: setup environment
+    name: build
     runs-on: ubuntu-latest  # Set the OS for the runner
 
     steps:
@@ -31,7 +31,7 @@ jobs:
       run: cargo build --release  # Build the project in release mode
 
   testing:
-    name: test code
+    name: test
     runs-on: ubuntu-latest  # Set the OS for the runner
     
     steps:
