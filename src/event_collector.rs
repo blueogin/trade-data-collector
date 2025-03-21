@@ -81,7 +81,7 @@ pub async fn collect_order_events(
         }
 
         start_block = end_block + 1;
-        sleep(Duration::from_millis(100)).await; // Avoid rate limits
+        // sleep(Duration::from_millis(100)).await; // Avoid rate limits
     }
 
     Ok(events)
