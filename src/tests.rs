@@ -1,6 +1,4 @@
 use super::*;
-use config::get_ws_rpc_url;
-use dotenv::dotenv;
 use ethers::providers::{Provider, Ws};
 use ethers::types::{H160, H256};
 use event_collector::{collect_order_events, write_to_csv, OrderEvent};
@@ -103,8 +101,7 @@ fn test_get_contract_creation_block_failure() {
 /// **Integration Test**: Tests the `get_latest_block_number` function by connecting to
 /// a WebSocket provider and checking if the block number is greater than 0.
 async fn test_get_latest_block_number() -> Result<(), Box<dyn std::error::Error>> {
-    dotenv().ok();
-    let ws_rpc_url = get_ws_rpc_url("Mainnet").unwrap();
+    let ws_rpc_url = "wss://mainnet.infura.io/ws/v3/afee43fb439a4e1794d9acad3e4a95b8";
     let provider = Provider::<Ws>::connect(&ws_rpc_url).await?;
     let latest_block = get_latest_block_number(&provider).await?;
 
