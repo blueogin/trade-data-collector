@@ -7,7 +7,7 @@ use ethers::providers::{Middleware, Provider, Ws};
 use ethers::types::{BlockNumber, Filter, Log, H160, H256, U64};
 use serde::Serialize;
 use serde_json::Value;
-// use tokio::time::{sleep, Duration};
+use tokio::time::{sleep, Duration};
 
 /// Represents a blockchain order event.
 #[derive(Debug, Serialize)]
@@ -81,7 +81,7 @@ pub async fn collect_order_events(
         }
 
         start_block = end_block + 1;
-        // sleep(Duration::from_millis(100)).await; // Avoid rate limits
+        sleep(Duration::from_millis(100)).await; // Avoid rate limits
     }
 
     Ok(events)

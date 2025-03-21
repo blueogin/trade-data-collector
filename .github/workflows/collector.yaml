@@ -30,14 +30,14 @@ jobs:
     - name: Build the project
       run: cargo build --release  # Build the project in release mode
 
-  testing:
-    name: test
+  running:
+    name: run
     runs-on: ubuntu-latest  # Set the OS for the runner
     
     steps:
     - uses: actions/checkout@v4
     - uses: actions-rust-lang/setup-rust-toolchain@v1
 
-    - name: Run tests
-      run: cargo test --verbose -- --nocapture # Run all tests
+    - name: produce csv
+      run: cargo run -- --contract 0x0ea6d458488d1cf51695e1d6e4744e6fb715d37c
 
