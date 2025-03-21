@@ -1,6 +1,6 @@
 # Trade Data Collector
 
-The **Trade Data Collector** is a Rust-based application designed to collect and export trade order events from a specified Ethereum-based decentralized exchange (DEX). It connects to the blockchain using a WebSocket RPC connection and listens for contract events, such as `TakeOrderV2` and `ClearV2`, that signify order actions on a DEX. The collected events are then written to a CSV file for further analysis.
+The **Trade Data Collector** is a Rust-based application designed to collect and export trade order events from a specified Ethereum-based decentralized exchange (DEX) contract which has IOrderBookV4.json as it's abi. It connects to the blockchain using a WebSocket RPC connection and listens for contract events, such as `TakeOrderV2` and `ClearV2`, that collects all orders actions on a DEX. The collected events are then written to a CSV file for further analysis.
 
 ## Features
 
@@ -16,14 +16,14 @@ The **Trade Data Collector** is a Rust-based application designed to collect and
 - Rust 1.58 or higher.
 - WebSocket RPC URL for the Ethereum network you want to connect to.
 - Etherscan API key for fetching contract creation blocks (optional).
-- ABI JSON file for the contract you want to track events from.
+- ABI JSON file for the contract you want to track events from(README.md).
 
 ## Installation
 
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/yourusername/trade-data-collector.git
+    git clone git@github.com:blueogin/trade-data-collector.git
     cd trade-data-collector
     ```
 
@@ -36,7 +36,7 @@ The **Trade Data Collector** is a Rust-based application designed to collect and
 3. Install dependencies:
 
     ```bash
-    cargo build
+    cargo build --release
     ```
 
 ## Usage
