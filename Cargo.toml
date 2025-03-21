@@ -1,0 +1,25 @@
+[package]
+name = "trade-data-collector"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+reth = "0.1"
+tokio = { version = "1", features = ["full"] }
+dotenv = "0.15"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+csv = "1.1"
+ethers-core = "2.0"
+ethers-providers = { version = "2.0", features = ["ws"] }
+ethers-contract = "2.0"
+ethers = "2.0"
+reqwest = { version = "0.11", features = ["blocking", "json"] }
+ureq = { version = "2.8.0", features = ["json"] }
+hex-literal = "1.0.0"
+clap = "4.5.32"
+mockito = "1.7.0"
+proptest = "1.0.0"
+proptest_async = { version = "0.1.1", default-features = false, features = ["tokio"] }
+tempfile = "3.3"
+hex = "0.4.3"
