@@ -9,18 +9,27 @@ on:
       - main   # Trigger workflow for pull requests targeting `main` branch
 
 jobs:
-  build:
+  building:
+    name: build code
     runs-on: ubuntu-latest  # Set the OS for the runner
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Rust
-      uses: actions/setup-rust@v1
+      uses: actions-rust-lang/setup-rust-toolchain@v1
       with:
-        rust-version: 1.87.0  # Use the desired version of Rust (can be replaced with `stable`)
+        rust-version: 1.87.0
 
+    - name: Build the project
+      run: cargo build --release  # Build the project in release mode
+
+  formatting:
+    name: format code
+    runs-on: ubuntu-latest  # Set the OS for the runner
+    
+    steps:
     - name: Install dependencies
       run: |
         rustup component add clippy
@@ -28,14 +37,16 @@ jobs:
     - name: Run clippy
       run: cargo clippy --all-targets --all-features -- -D warnings  # Run clippy to lint the code
 
-    - name: Build the project
-      run: cargo build --release  # Build the project in release mode
-
-    - name: Run tests
-      run: cargo test --verbose  # Run all tests
-
     - name: Check formatting
       run: cargo fmt -- --check  # Check formatting with rustfmt
+
+  testing:
+    name: test code
+    runs-on: ubuntu-latest  # Set the OS for the runner
+    
+    steps:
+    - name: Run tests
+      run: cargo test --verbose  # Run all tests
 
     - name: Run tests on sample dataset (if applicable)
       run: cargo test -- --nocapture  # Optionally run specific tests if needed
