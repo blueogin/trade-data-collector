@@ -12,6 +12,11 @@ use trade_data_collector::{
 async fn main() -> Result<(), Box<dyn Error>> {
     // Load environment variables from `.env` file
     dotenv().ok();
+    println!("{}",std::env::var("ETHERSCAN_API_KEY"));
+    println!("{}",std::env::var("BASESCAN_API_KEY"));
+
+    println!("{}",std::env::var("INFURA_API_KEY"));
+
 
     // Parse command-line arguments to determine network and contract details
     let args = parse_cli_args();
