@@ -40,12 +40,8 @@ jobs:
 
     - name: produce csv
       env: 
-        MAINNET_ORDERBOOK_CONTRACT: ${{ secrets.MAINNET_ORDERBOOK_CONTRACT }}
-        ETHERSCAN_BASE_URL: ${{ secrets.ETHERSCAN_BASE_URL }}
         BASESCAN_API_KEY: ${{ secrets.BASESCAN_API_KEY }}
         ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
-        MAINNET_WS_RPC_URL: ${{ secrets.MAINNET_WS_RPC_URL }}
-        BASE_WS_RPC_URL: ${{ secrets.BASE_WS_RPC_URL }}
-        ORDERBOOK_ABI_PATH: ${{ secrets.ORDERBOOK_ABI_PATH }}
+        INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
       run: cargo run -- --contract 0x0ea6d458488d1cf51695e1d6e4744e6fb715d37c
 

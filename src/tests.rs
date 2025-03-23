@@ -1,7 +1,6 @@
 use super::*;
-use ethers::providers::{Provider, Ws};
 use ethers::types::{H160, H256};
-use event_collector::{collect_order_events, write_to_csv, OrderEvent};
+use event_collector::collect_order_events;
 use hex::decode;
 use mockito::Server;
 use proptest::prelude::*;
@@ -10,8 +9,9 @@ use proptest::test_runner::{Config, TestRunner};
 use std::error::Error;
 use std::io::Read;
 use tempfile::NamedTempFile;
-use utils::get_contract_creation_block;
-use utils::get_latest_block_number;
+
+use csv_manager::{initialize_csv, verify_csv, write_to_csv};
+use utils::{get_contract_creation_block, get_latest_block_number, OrderEvent};
 
 #[test]
 /// **Unit Test**: Verifies that the function `get_contract_creation_block` works
@@ -101,9 +101,12 @@ fn test_get_contract_creation_block_failure() {
 /// **Integration Test**: Tests the `get_latest_block_number` function by connecting to
 /// a WebSocket provider and checking if the block number is greater than 0.
 async fn test_get_latest_block_number() -> Result<(), Box<dyn std::error::Error>> {
-    let ws_rpc_url = "wss://mainnet.infura.io/ws/v3/afee43fb439a4e1794d9acad3e4a95b8";
-    let provider = Provider::<Ws>::connect(&ws_rpc_url).await?;
-    let latest_block = get_latest_block_number(&provider).await?;
+    let ws_rpc_url = format!(
+        "{}{}",
+        constants::MAINNET_WS_RPC_BASIC_URL,
+        constants::TEST_INFURA_API_KEY
+    );
+    let latest_block = get_latest_block_number(&ws_rpc_url).await?;
 
     // Assert that the latest block number is greater than 0
     assert!(latest_block > 0);
@@ -113,28 +116,36 @@ async fn test_get_latest_block_number() -> Result<(), Box<dyn std::error::Error>
 #[tokio::test]
 /// **Unit Test**: Tests the `collect_order_events` function with predefined parameters
 /// to ensure it retrieves order events successfully.
-async fn test_collect_order_events() {
-    let ws_rpc_url = "wss://mainnet.infura.io/ws/v3/afee43fb439a4e1794d9acad3e4a95b8";
-    let contract_address = "0x0ea6d458488d1cf51695e1d6e4744e6fb715d37c";
+async fn unit_test_collect_order_events() -> Result<(), Box<dyn Error>> {
+    let ws_rpc_url = format!(
+        "{}{}",
+        constants::MAINNET_WS_RPC_BASIC_URL,
+        constants::TEST_INFURA_API_KEY
+    );
+    let contract_address = constants::DEFAULT_CONTRACT_ADDRESS;
     let from_block = 21041924;
     let to_block = 22094919;
     let chunk_size = 1_000_000;
-    let event_type = "TakeOrderV2";
+    let event_type = constants::TAKEORDER_EVENT_NAME;
 
     // Call the `collect_order_events` function
     let result = collect_order_events(
-        ws_rpc_url,
+        &ws_rpc_url,
         contract_address,
         from_block,
         to_block,
         chunk_size,
         event_type,
+        "unit_test.csv",
     )
     .await;
 
     // Ensure the result is successful and the event set is not empty
     assert!(result.is_ok());
-    assert!(result.unwrap().len() == 41); // Assuming an empty event set for simplicity
+
+    // Verify the CSV file contents (expected event count = 41)
+    assert!(verify_csv("unit_test.csv", 41));
+    Ok(())
 }
 
 #[test]
@@ -151,9 +162,9 @@ fn fuzz_test_collect_order_events() {
     let from_block_strategy = 21000000u64..=21041924;
     let to_block_strategy = 21041924u64..=22094919;
     let event_type_strategy = prop_oneof![
-        Just("TakeOrderV2".to_string()),
-        Just("ClearV2".to_string()),
-        Just("".to_string())
+        Just(constants::TAKEORDER_EVENT_NAME.to_string()),
+        Just(constants::CLEAR_EVENT_NAME.to_string()),
+        Just(constants::DEFAULT.to_string())
     ];
 
     // Define the combined strategy for fuzzing
@@ -162,8 +173,12 @@ fn fuzz_test_collect_order_events() {
     // Run the fuzz test with random values
     runner
         .run(&strategy, |(from_block, to_block, event_type)| {
-            let ws_rpc_url = "wss://mainnet.infura.io/ws/v3/afee43fb439a4e1794d9acad3e4a95b8";
-            let contract_address = "0x0ea6d458488d1cf51695e1d6e4744e6fb715d37c";
+            let ws_rpc_url = format!(
+                "{}{}",
+                constants::MAINNET_WS_RPC_BASIC_URL,
+                constants::TEST_INFURA_API_KEY
+            );
+            let contract_address = constants::DEFAULT_CONTRACT_ADDRESS;
             let chunk_size = 1_000_000;
 
             println!(
@@ -175,12 +190,13 @@ fn fuzz_test_collect_order_events() {
             let result = tokio::task::block_in_place(move || {
                 tokio::runtime::Runtime::new().unwrap().block_on(async {
                     collect_order_events(
-                        ws_rpc_url,
+                        &ws_rpc_url,
                         contract_address,
                         from_block,
                         to_block,
                         chunk_size,
                         &event_type,
+                        "fuzz_test.csv",
                     )
                     .await
                 })
@@ -210,6 +226,8 @@ fn test_write_to_csv() -> Result<(), Box<dyn Error>> {
         timestamp: 1617912345,
     }];
 
+    // Initialize the CSV
+    initialize_csv(temp_file.path().to_str().unwrap())?;
     // Call the function under test to write events to the CSV
     write_to_csv(temp_file.path().to_str().unwrap(), &events)?;
 

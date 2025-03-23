@@ -1,5 +1,7 @@
 use clap::{Arg, Command};
 
+use crate::constants;
+
 /// Structure to hold command-line arguments for the Trade Data Collector.
 pub struct CliArgs {
     /// The blockchain network to connect to (e.g., Mainnet, Testnet).
@@ -15,7 +17,7 @@ pub struct CliArgs {
 /// This function utilizes the `clap` crate to handle CLI arguments.
 /// It defines and retrieves values for the following options:
 /// - `--network` (`-n`): Specifies the blockchain network (default: Mainnet).
-/// - `--contract` (`-c`): Specifies the smart contract address (required).
+/// - `--contract` (`-c`): Specifies the smart contract address (default: 0x0ea6d458488d1cf51695e1d6e4744e6fb715d37c).
 /// - `--event` (`-e`): Specifies the event type to filter (optional).
 ///
 /// # Returns
@@ -23,7 +25,7 @@ pub struct CliArgs {
 pub fn parse_cli_args() -> CliArgs {
     let matches = Command::new("Trade Data Collector")
         .version("1.0")
-        .author("Your Name")
+        .author("Mike")
         .about("Collects and exports trade order events from a DEX")
         .arg(
             Arg::new("network")
@@ -40,7 +42,7 @@ pub fn parse_cli_args() -> CliArgs {
                 .long("contract")
                 .num_args(1)
                 .value_name("CONTRACT_ADDRESS")
-                .required(true)
+                .default_value(constants::DEFAULT_CONTRACT_ADDRESS)
                 .help("The smart contract address to track events from"),
         )
         .arg(
@@ -48,7 +50,7 @@ pub fn parse_cli_args() -> CliArgs {
                 .short('e')
                 .long("event")
                 .value_name("EVENT_TYPE")
-                .default_value("")
+                .default_value(constants::DEFAULT)
                 .help("Filters by a specific event type (e.g., TakeOrderV2, ClearV2)"),
         )
         .get_matches();
