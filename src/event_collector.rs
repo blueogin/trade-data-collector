@@ -6,6 +6,7 @@ use ethers::providers::{Middleware, Provider, Ws};
 use ethers::types::{BlockNumber, Filter, Log, H160, H256, U64};
 use serde_json::Value;
 use tokio::time::{sleep, Duration};
+use log::{error, info};
 
 use crate::constants;
 use crate::csv_manager::{initialize_csv, write_to_csv};
@@ -55,14 +56,14 @@ pub async fn collect_order_events(
     // Initialize CSV file once before appending
     initialize_csv(filename)?;
 
-    println!(
+    info!(
         "Collecting Event data from {} to {} with chunk size of {} for {} contract",
         from_block, to_block, chunk_size, contract_address,
     );
     while start_block <= to_block {
         let end_block = min(start_block + chunk_size - 1, to_block);
 
-        println!(
+        info!(
             "    Collecting Event data from {} to {}",
             start_block, end_block,
         );
@@ -84,14 +85,14 @@ pub async fn collect_order_events(
                 }
             }
             Err(e) => {
-                eprintln!(
+                error!(
                     "Error fetching logs for blocks {} to {}: {:?}",
                     start_block, end_block, e
                 );
             }
         }
 
-        println!(
+        info!(
             "    Ending Event data from {} to {}",
             start_block, end_block,
         );
@@ -99,11 +100,11 @@ pub async fn collect_order_events(
         sleep(Duration::from_millis(100)).await; // Avoid rate limits
     }
 
-    println!(
+    info!(
         "Ending Event data from {} to {} with chunk size of {} for {} contract",
         from_block, to_block, chunk_size, contract_address,
     );
-    println!("✅ Data exported successfully!");
+    info!("✅ Data exported successfully!");
     Ok(())
 }
 
@@ -133,7 +134,7 @@ async fn process_logs(
                             timestamp: block.timestamp.as_u64(),
                         };
 
-                        println!(
+                        info!(
                             "        Tx Hash: {}  Event Type: {}",
                             event.txn_hash, event.event_type
                         );

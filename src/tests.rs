@@ -181,7 +181,7 @@ fn fuzz_test_collect_order_events() {
             let contract_address = constants::DEFAULT_CONTRACT_ADDRESS;
             let chunk_size = 1_000_000;
 
-            println!(
+            info!(
                 "Running test with from_block: {}, to_block: {}, chunk_size: {}, event_type: {:?}",
                 from_block, to_block, chunk_size, event_type
             );

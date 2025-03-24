@@ -1,17 +1,23 @@
 use dotenv::dotenv;
 use std::error::Error;
 use trade_data_collector::{
-    cli::parse_cli_args,
     constants,
+    cli::parse_cli_args,
     event_collector::collect_order_events,
     utils::get_ws_rpc_url,
     utils::{get_contract_creation_block, get_latest_block_number},
 };
+use log::info;
+use env_logger::Env;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     // Load environment variables from `.env` file
     dotenv().ok();
+
+    // Initialize the logger and enable backtrace
+    env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
+    std::env::set_var("RUST_BACKTRACE", "1");
 
     // Parse command-line arguments to determine network and contract details
     let args = parse_cli_args();
@@ -33,8 +39,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let end_block = get_latest_block_number(&ws_rpc_url).await?;
 
     // Display contract creation and latest block information
-    println!("Contract created at block: {}", creation_block);
-    println!("Latest block: {}", end_block);
+    info!("Contract created at block: {}", creation_block);
+    info!("Latest block: {}", end_block);
 
     // Collect order events within the block range
     collect_order_events(
