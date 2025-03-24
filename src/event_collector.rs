@@ -48,8 +48,8 @@ pub async fn collect_order_events(
     let abi = load_abi(constants::ABI_FILE_PATH)?;
     let event_signatures = get_event_signatures(&abi, event_type)?;
 
-    let take_order_event = abi.event("TakeOrderV2")?;
-    let clear_event = abi.event("ClearV2")?;
+    let take_order_event = abi.event(constants::TAKEORDER_EVENT_NAME)?;
+    let clear_event = abi.event(constants::CLEAR_EVENT_NAME)?;
 
     let mut start_block = from_block;
 
@@ -118,9 +118,9 @@ async fn process_logs(
 ) {
     for log in logs {
         let detected_event = if log.topics[0] == take_order_event.signature() {
-            "TakeOrderV2"
+            constants::TAKEORDER_EVENT_NAME
         } else {
-            "ClearV2"
+            constants::CLEAR_EVENT_NAME
         };
 
         if let Some(block_number) = log.block_number {

@@ -24,16 +24,16 @@ fn test_get_contract_creation_block_success() {
 
     // Mock API response with block number for contract creation
     let mock_resp = r#"
-  {
-    "status": "1",
-    "message": "OK",
-    "result": [
-      {
-        "contractAddress": "0x1234567890abcdef",
-        "blockNumber": "12345678"
-      }
-    ]
-  }"#;
+    {
+      "status": "1",
+      "message": "OK",
+      "result": [
+        {
+          "contractAddress": "0x1234567890abcdef",
+          "blockNumber": "12345678"
+        }
+      ]
+    }"#;
 
     let url = format!(
         "/api?module=contract&action=getcontractcreation&contractaddresses={}&apikey={}",
@@ -66,16 +66,16 @@ fn test_get_contract_creation_block_failure() {
 
     // Mock API response with an error status
     let mock_resp = r#"
-  {
-    "status": "0",
-    "message": "OK",
-    "result": [
-      {
-        "contractAddress": "0x1234567890abcdef",
-        "blockNumber": "12345678"
-      }
-    ]
-  }"#;
+    {
+      "status": "0",
+      "message": "OK",
+      "result": [
+        {
+          "contractAddress": "0x1234567890abcdef",
+          "blockNumber": "12345678"
+        }
+      ]
+    }"#;
 
     let url = format!(
         "/api?module=contract&action=getcontractcreation&contractaddresses={}&apikey={}",
@@ -220,7 +220,7 @@ fn test_write_to_csv() -> Result<(), Box<dyn Error>> {
     // Prepare test data for order events
     let events = vec![OrderEvent {
         tx_origin: H160::from_slice(decode("abc123abc123abc123abc123abc123abc123abcd")?.as_slice()),
-        event_type: "TakeOrderV2".to_string(),
+        event_type: constants::TAKEORDER_EVENT_NAME.to_string(),
         txn_hash: H256::from_slice(
             decode("1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef")?.as_slice(),
         ),
