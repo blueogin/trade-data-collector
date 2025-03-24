@@ -158,6 +158,5 @@ pub fn load_abi(abi_path: &str) -> Result<String, Box<dyn Error>> {
     let bindings = Abigen::new("MyContract", abi_content)?.generate()?;
 
     // Return the generated bindings as a string
-    // Ok(serde_json::to_string(&bindings)?)
-    Ok(bindings.to_string()) 
+    Ok(bindings.to_string())
 }

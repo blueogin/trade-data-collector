@@ -16,9 +16,8 @@ ethers-providers = "2.0.0"
 hex = "0.4.3"
 hex-literal = "0.4.1"
 
-
 log = "0.4.14"
-mockito = "0.31.0"
+mockito = "1.7.0"
 proptest = "1.0.0"
 proptest_async = { version = "0.1.1", default-features = false, features = ["tokio"] }
 reqwest = "0.11"
