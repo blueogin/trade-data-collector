@@ -11,6 +11,7 @@ use std::io::Read;
 use tempfile::NamedTempFile;
 
 use csv_manager::{initialize_csv, verify_csv, write_to_csv};
+use log::info;
 use utils::{get_contract_creation_block, get_latest_block_number, OrderEvent};
 
 #[test]

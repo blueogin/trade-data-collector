@@ -4,9 +4,9 @@ use std::error::Error;
 use ethers::abi::Abi;
 use ethers::providers::{Middleware, Provider, Ws};
 use ethers::types::{BlockNumber, Filter, Log, H160, H256, U64};
+use log::{error, info};
 use serde_json::Value;
 use tokio::time::{sleep, Duration};
-use log::{error, info};
 
 use crate::constants;
 use crate::csv_manager::{initialize_csv, write_to_csv};

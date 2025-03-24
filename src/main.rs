@@ -1,14 +1,14 @@
 use dotenv::dotenv;
+use env_logger::Env;
+use log::info;
 use std::error::Error;
 use trade_data_collector::{
-    constants,
     cli::parse_cli_args,
+    constants,
     event_collector::collect_order_events,
     utils::get_ws_rpc_url,
     utils::{get_contract_creation_block, get_latest_block_number},
 };
-use log::info;
-use env_logger::Env;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
