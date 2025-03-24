@@ -45,3 +45,6 @@ Run the application with the desired options using the following command format:
 
 ```bash
 cargo run -- --network <NETWORK> --contract <CONTRACT_ADDRESS> --event <EVENT_TYPE>
+```
+
+You can find result in order_events.csv.
