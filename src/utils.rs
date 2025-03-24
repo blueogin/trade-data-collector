@@ -89,7 +89,8 @@ pub fn get_contract_creation_block(
     );
 
     // Send the request to Etherscan API and parse the JSON response
-    let res: Value = ureq::get(&url).call()?.into_json()?;
+    let res: String = ureq::get(&url).call()?.into_string()?;
+    let res: Value = serde_json::from_str(&res)?;
 
     // Check if the API response status is successful
     if res["status"] == "1" {
@@ -157,5 +158,6 @@ pub fn load_abi(abi_path: &str) -> Result<String, Box<dyn Error>> {
     let bindings = Abigen::new("MyContract", abi_content)?.generate()?;
 
     // Return the generated bindings as a string
-    Ok(bindings.to_string())
+    // Ok(serde_json::to_string(&bindings)?)
+    Ok(bindings.to_string()) 
 }
