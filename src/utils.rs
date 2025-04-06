@@ -145,11 +145,6 @@ pub async fn get_latest_block_number(ws_rpc_url: &str) -> Result<u64, Box<dyn Er
 ///
 /// # Errors
 /// * Returns an error if the file cannot be read or if the ABI parsing fails.
-///
-/// # Example
-/// ```rust
-/// let abi_bindings = load_abi("./path/to/contract.abi").expect("Failed to load ABI");
-/// ```
 pub fn load_abi(abi_path: &str) -> Result<String, Box<dyn Error>> {
     // Read the ABI file content into a string
     let abi_content = fs::read_to_string(abi_path)?;

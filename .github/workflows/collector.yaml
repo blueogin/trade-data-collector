@@ -19,16 +19,31 @@ jobs:
 
     - name: Install dependencies
       run: |
-        rustup component add clippy
+        nix develop --command rustup component add clippy
 
     - name: Run clippy
-      run: cargo clippy --all-targets --all-features -- -D warnings  # Run clippy to lint the code
+      run: nix develop --command cargo clippy --all-targets --all-features -- -D warnings  # Run clippy to lint the code
 
     - name: Check formatting
-      run: cargo fmt -- --check  # Check formatting with rustfmt
+      run: nix develop --command cargo fmt -- --check  # Check formatting with rustfmt
 
     - name: Build the project
-      run: cargo build --release  # Build the project in release mode
+      run: nix develop --command cargo build --release  # Build the project in release mode
+
+  testing:
+    name: run
+    runs-on: ubuntu-latest  # Set the OS for the runner
+    
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions-rust-lang/setup-rust-toolchain@v1
+
+    - name: produce csv
+      env: 
+        BASESCAN_API_KEY: ${{ secrets.BASESCAN_API_KEY }}
+        ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+        INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
+      run: nix develop --command cargo test
 
   running:
     name: run
@@ -43,5 +58,5 @@ jobs:
         BASESCAN_API_KEY: ${{ secrets.BASESCAN_API_KEY }}
         ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
         INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
-      run: cargo run
+      run: nix develop --command cargo run
 
